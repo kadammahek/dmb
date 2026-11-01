@@ -1,0 +1,136 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
+using namespace std;
+
+// Partition for deterministic Quick Sort
+int partitionArray(int arr[], int low, int high)
+{
+    int pivot = arr[high];
+
+    int i = low - 1;
+
+    for (int j = low; j < high; j++)
+    {
+        if (arr[j] < pivot)
+        {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+
+    swap(arr[i + 1], arr[high]);
+
+    return i + 1;
+}
+
+// Deterministic Quick Sort
+void quickSort(int arr[], int low, int high)
+{
+    if (low < high)
+    {
+        int pi = partitionArray(arr, low, high);
+
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+// Randomized Partition
+int randomizedPartition(int arr[], int low, int high)
+{
+    int randomIndex =
+        low + rand() % (high - low + 1);
+
+    swap(arr[randomIndex], arr[high]);
+
+    return partitionArray(arr, low, high);
+}
+
+// Randomized Quick Sort
+void randomizedQuickSort(int arr[], int low, int high)
+{
+    if (low < high)
+    {
+        int pi = randomizedPartition(arr, low, high);
+
+        randomizedQuickSort(arr, low, pi - 1);
+        randomizedQuickSort(arr, pi + 1, high);
+    }
+}
+
+// Display array
+void display(int arr[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << arr[i] << " ";
+    }
+
+    cout << endl;
+}
+
+int main()
+{
+    int n;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    if (n <= 0)
+    {
+        cout << "Invalid array size.";
+        return 0;
+    }
+
+    int arr1[n], arr2[n];
+
+    cout << "Enter array elements:\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr1[i];
+        arr2[i] = arr1[i];
+    }
+
+    srand(time(0));
+
+    // Deterministic Quick Sort
+    quickSort(arr1, 0, n - 1);
+
+    // Randomized Quick Sort
+    randomizedQuickSort(arr2, 0, n - 1);
+
+    cout << "\nDeterministic Quick Sort:\n";
+    display(arr1, n);
+
+    cout << "\nRandomized Quick Sort:\n";
+    display(arr2, n);
+
+    return 0;
+}
+
+/*
+SAMPLE INPUT:
+Enter number of elements: 7
+
+Enter array elements:
+8 3 1 7 0 10 2
+
+SAMPLE OUTPUT:
+Deterministic Quick Sort:
+0 1 2 3 7 8 10
+
+Randomized Quick Sort:
+0 1 2 3 7 8 10
+
+Time Complexity:
+Best Case: O(n log n)
+Average Case: O(n log n)
+Worst Case: O(n^2)
+
+Space Complexity:
+Average: O(log n) recursion stack
+Worst: O(n) recursion stack
+*/
