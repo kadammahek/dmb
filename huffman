@@ -1,0 +1,119 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+struct Node
+{
+    char data;
+    int frequency;
+
+    Node *left, *right;
+
+    Node(char ch, int freq)
+    {
+        data = ch;
+        frequency = freq;
+        left = right = NULL;
+    }
+};
+
+// Compare nodes to create a Min Heap
+struct Compare
+{
+    bool operator()(Node *a, Node *b)
+    {
+        return a->frequency > b->frequency;
+    }
+};
+
+// Print Huffman codes
+void printCodes(Node *root, string code)
+{
+    if (root == NULL)
+        return;
+
+    if (root->left == NULL && root->right == NULL)
+    {
+        cout << root->data << " : " << code << endl;
+        return;
+    }
+
+    printCodes(root->left, code + "0");
+    printCodes(root->right, code + "1");
+}
+
+int main()
+{
+    int n;
+
+    cout << "Enter number of characters: ";
+    cin >> n;
+
+    priority_queue<Node *, vector<Node *>, Compare> minHeap;
+
+    for (int i = 0; i < n; i++)
+    {
+        char ch;
+        int freq;
+
+        cout << "Enter character and frequency: ";
+        cin >> ch >> freq;
+
+        minHeap.push(new Node(ch, freq));
+    }
+
+    // Build Huffman Tree
+    while (minHeap.size() > 1)
+    {
+        Node *left = minHeap.top();
+        minHeap.pop();
+
+        Node *right = minHeap.top();
+        minHeap.pop();
+
+        Node *newNode = new Node(
+            '$',
+            left->frequency + right->frequency
+        );
+
+        newNode->left = left;
+        newNode->right = right;
+
+        minHeap.push(newNode);
+    }
+
+    Node *root = minHeap.top();
+
+    cout << "\nHuffman Codes:\n";
+    printCodes(root, "");
+
+    return 0;
+}
+
+/*
+SAMPLE INPUT:
+Enter number of characters: 6
+
+a 5
+b 9
+c 12
+d 13
+e 16
+f 45
+
+SAMPLE OUTPUT:
+Huffman Codes:
+f : 0
+c : 100
+d : 101
+a : 1100
+b : 1101
+e : 111
+
+Time Complexity: O(n log n)
+Space Complexity: O(n)
+
+Note: The exact 0/1 codes can vary if
+two nodes have equal frequencies.
+*/
