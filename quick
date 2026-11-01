@@ -1,14 +1,14 @@
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
 using namespace std;
 
-// Partition for deterministic Quick Sort
+// Partition function
 int partitionArray(int arr[], int low, int high)
 {
     int pivot = arr[high];
-
     int i = low - 1;
 
     for (int j = low; j < high; j++)
@@ -60,14 +60,13 @@ void randomizedQuickSort(int arr[], int low, int high)
     }
 }
 
-// Display array
+// Display sorted array
 void display(int arr[], int n)
 {
     for (int i = 0; i < n; i++)
     {
         cout << arr[i] << " ";
     }
-
     cout << endl;
 }
 
@@ -84,9 +83,11 @@ int main()
         return 0;
     }
 
-    int arr1[n], arr2[n];
+    // Dynamic memory allocation
+    int *arr1 = new int[n];
+    int *arr2 = new int[n];
 
-    cout << "Enter array elements:\n";
+    cout << "Enter array elements: ";
 
     for (int i = 0; i < n; i++)
     {
@@ -94,12 +95,13 @@ int main()
         arr2[i] = arr1[i];
     }
 
+    // Initialize random number generator
     srand(time(0));
 
-    // Deterministic Quick Sort
+    // Apply Deterministic Quick Sort
     quickSort(arr1, 0, n - 1);
 
-    // Randomized Quick Sort
+    // Apply Randomized Quick Sort
     randomizedQuickSort(arr2, 0, n - 1);
 
     cout << "\nDeterministic Quick Sort:\n";
@@ -108,29 +110,41 @@ int main()
     cout << "\nRandomized Quick Sort:\n";
     display(arr2, n);
 
+    // Free allocated memory
+    delete[] arr1;
+    delete[] arr2;
+
     return 0;
 }
 
 /*
 SAMPLE INPUT:
-Enter number of elements: 7
 
+Enter number of elements: 7
 Enter array elements:
 8 3 1 7 0 10 2
 
 SAMPLE OUTPUT:
+
 Deterministic Quick Sort:
 0 1 2 3 7 8 10
 
 Randomized Quick Sort:
 0 1 2 3 7 8 10
 
-Time Complexity:
+TIME COMPLEXITY:
 Best Case: O(n log n)
 Average Case: O(n log n)
 Worst Case: O(n^2)
 
-Space Complexity:
-Average: O(log n) recursion stack
-Worst: O(n) recursion stack
+SPACE COMPLEXITY:
+Average Case: O(log n)
+Worst Case: O(n)
+
+NOTE:
+Deterministic Quick Sort selects the last
+element as pivot.
+
+Randomized Quick Sort selects a random
+element as pivot.
 */
