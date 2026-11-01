@@ -1,0 +1,122 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+int board[20][20];
+
+// Check whether a position is safe
+bool isSafe(int row, int col)
+{
+    // Check same column in previous rows
+    for (int i = 0; i < row; i++)
+    {
+        if (board[i][col] == 1)
+            return false;
+    }
+
+    // Check upper-left diagonal
+    for (int i = row - 1, j = col - 1;
+         i >= 0 && j >= 0; i--, j--)
+    {
+        if (board[i][j] == 1)
+            return false;
+    }
+
+    // Check upper-right diagonal
+    for (int i = row - 1, j = col + 1;
+         i >= 0 && j < n; i--, j++)
+    {
+        if (board[i][j] == 1)
+            return false;
+    }
+
+    return true;
+}
+
+// Solve using Backtracking
+bool solveNQueens(int row)
+{
+    if (row == n)
+        return true;
+
+    for (int col = 0; col < n; col++)
+    {
+        if (isSafe(row, col))
+        {
+            board[row][col] = 1;
+
+            if (solveNQueens(row + 1))
+                return true;
+
+            // Backtrack
+            board[row][col] = 0;
+        }
+    }
+
+    return false;
+}
+
+int main()
+{
+    cout << "Enter value of N: ";
+    cin >> n;
+
+    if (n < 1 || n > 20)
+    {
+        cout << "Enter N between 1 and 20.";
+        return 0;
+    }
+
+    // Initialize board
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            board[i][j] = 0;
+        }
+    }
+
+    // Place first queen at row 1, column 1
+    board[0][0] = 1;
+
+    if (solveNQueens(1))
+    {
+        cout << "\nN-Queens Solution:\n";
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (board[i][j] == 1)
+                    cout << "Q ";
+                else
+                    cout << ". ";
+            }
+
+            cout << endl;
+        }
+    }
+    else
+    {
+        cout << "No solution exists.";
+    }
+
+    return 0;
+}
+
+/*
+SAMPLE INPUT:
+Enter value of N: 4
+
+SAMPLE OUTPUT:
+N-Queens Solution:
+Q . . .
+. . Q .
+. . . Q
+. Q . .
+
+Time Complexity: O(N!) (commonly stated
+for the standard backtracking approach)
+Space Complexity: O(N^2) for the board
+*/
